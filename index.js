@@ -1,10 +1,11 @@
 import { Client, GatewayIntentBits } from "discord.js";
 import fs from "fs";
 import * as dotenv from "dotenv";
+import block from './database.js';
 
 dotenv.config();
 
-let lastSeenBlock = 17118687
+let lastSeenBlock = block
 
 // Create a client instance
 const client = new Client({
@@ -36,7 +37,7 @@ setInterval(async function () {
   const response = await fetch(`https://api.etherscan.io/api?module=account&action=txlist&address=0x213f6b2680dce3e4d0924acff3e4e34520ef9ba1&startblock=${lastSeenBlock}&endblock=99999999&page=1&offset=10&sort=desc&apikey=${process.env.ETHERSCANAPIKEY}`);
   const data = await response.json();
 
-  if(data.result[0].blockNumber === lastSeenBlock) {
+  if(data.result[0].blockNumber.toString() === lastSeenBlock.toString()) {
     console.log('No new transactions')
   } else {
     data.result.forEach( element => {
@@ -52,6 +53,6 @@ setInterval(async function () {
     })
   }
 
-  lastSeenBlock = data.result[0].blockNumber
+  fs.writeFileSync('myjson.json',  `const block = ${data.result[0].blockNumber}\nexport default block`);
 
 }, 5000);
