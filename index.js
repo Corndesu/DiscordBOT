@@ -53,6 +53,6 @@ setInterval(async function () {
     })
   }
 
-  fs.writeFileSync('myjson.json',  `const block = ${data.result[0].blockNumber}\nexport default block`);
+  fs.writeFileSync('database.js',  `const block = ${data.result[0].blockNumber}\nexport default block`);
 
 }, 5000);
