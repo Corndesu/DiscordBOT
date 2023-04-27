@@ -32,7 +32,8 @@ client.on("newTransaction", async (message) => {
 
 // Run this code every 5 seconds
 setInterval(async function () {
-  const response = await fetch(`https://api.etherscan.io/api?module=account&action=txlist&address=0x213f6b2680dce3e4d0924acff3e4e34520ef9ba1&startblock=${lastSeenBlock}&endblock=99999999&page=1&offset=10&sort=desc&apikey=${process.env.ETHERSCANAPIKEY}`);
+  try {
+    const response = await fetch(`https://api.etherscan.io/api?module=account&action=txlist&address=0x213f6b2680dce3e4d0924acff3e4e34520ef9ba1&startblock=${lastSeenBlock}&endblock=99999999&page=1&offset=10&sort=desc&apikey=${process.env.ETHERSCANAPIKEY}`);
   const data = await response.json();
 
   if(data.result[0].blockNumber.toString() === lastSeenBlock.toString()) {
@@ -52,5 +53,7 @@ setInterval(async function () {
   }
 
   lastSeenBlock = data.result[0].blockNumber
-
+  } catch(err) {
+    console.log(err)
+  }
 }, 5000);
