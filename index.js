@@ -1,11 +1,9 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import fs from "fs";
 import * as dotenv from "dotenv";
-import block from './database.js';
 
 dotenv.config();
 
-let lastSeenBlock = block
+let lastSeenBlock = 17133258
 
 // Create a client instance
 const client = new Client({
@@ -48,11 +46,11 @@ setInterval(async function () {
       } else {
         IO = "🚫 OUT Transaction 🍩"
       }
-      const message = `${IO}\nhttps://etherscan.io/tx/${element.hash}`
-      client.emit("newTransaction", message);
+
+      client.emit("newTransaction", `${IO}\nhttps://etherscan.io/tx/${element.hash}`);
     })
   }
 
-  fs.writeFileSync('database.js',  `const block = ${data.result[0].blockNumber}\nexport default block`);
+  lastSeenBlock = data.result[0].blockNumber
 
 }, 5000);
